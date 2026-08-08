@@ -756,6 +756,8 @@ a:hover {
 .filter-bar {
   margin-bottom: 1.5rem;
   padding: 1rem 1.25rem;
+  position: relative;
+  z-index: 10;
 }
 
 .filter-bar-inner {
@@ -800,7 +802,7 @@ a:hover {
 /* Ticket Queue Card */
 .ticket-queue-card {
   padding: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .ticket-queue-header {

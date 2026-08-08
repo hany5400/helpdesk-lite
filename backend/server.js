@@ -37,10 +37,8 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, async () => {
-  console.log(`====================================================`);
   console.log(`  HelpDesk Lite Express Backend Server Running`);
   console.log(`  Port: http://localhost:${PORT}`);
   console.log(`  Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`====================================================`);
   await testConnection();
 });

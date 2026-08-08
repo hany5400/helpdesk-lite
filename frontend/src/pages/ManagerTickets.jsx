@@ -39,6 +39,7 @@ const ManagerTickets = () => {
   const fetchTickets = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
+    const startTime = Date.now();
     try {
       const res = await axiosInstance.get('/support/tickets');
       if (res.data.success) {
@@ -48,9 +49,12 @@ const ManagerTickets = () => {
       showToast('Failed to load tickets', 'error');
     } finally {
       setLoading(false);
-      setRefreshing(false);
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, 3000 - elapsed);
+      setTimeout(() => setRefreshing(false), remaining);
     }
-  }, [showToast]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     fetchTickets();

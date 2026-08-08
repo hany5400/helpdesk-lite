@@ -46,6 +46,7 @@ const SupportDashboard = () => {
   const fetchSupportTickets = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
+    const startTime = Date.now();
     try {
       const res = await axiosInstance.get('/support/tickets');
       if (res.data.success) {
@@ -55,9 +56,12 @@ const SupportDashboard = () => {
       showToast('Failed to load support tickets queue', 'error');
     } finally {
       setLoading(false);
-      setRefreshing(false);
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, 3000 - elapsed);
+      setTimeout(() => setRefreshing(false), remaining);
     }
-  }, [showToast]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     fetchSupportTickets();
@@ -292,8 +296,8 @@ const SupportDashboard = () => {
                           value={t.status}
                           onChange={(e) => handleStatusUpdate(t.id, e.target.value)}
                         >
-                          {STATUS_OPTIONS.map((st) => (
-                            <option key={st} value={st}>{st}</option>
+                          {STATUS_OPTIONS.filter(st => st.value !== 'All').map((st) => (
+                            <option key={st.value} value={st.value}>{st.label}</option>
                           ))}
                         </select>
                       )}
