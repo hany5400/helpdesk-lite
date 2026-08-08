@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { Headphones, Lock, Mail, UserCheck, ShieldAlert, ArrowRight } from 'lucide-react';
+import { Headphones, Lock, Mail, UserCheck, ShieldAlert, ArrowRight, User, Headset, BarChart3, Zap } from 'lucide-react';
 import Spinner from '../components/Common/Spinner';
 
 const Login = () => {
@@ -143,8 +143,8 @@ const Login = () => {
 
           {/* Quick Demo Login Preset Buttons */}
           <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
-            <p style={{ fontSize: '0.775rem', textTransform: 'uppercase', color: 'var(--text-dim)', fontWeight: 700, marginBottom: '0.75rem', letterSpacing: '0.05em' }}>
-              ⚡ Quick Demo One-Click Sign In:
+            <p style={{ fontSize: '0.775rem', textTransform: 'uppercase', color: 'var(--text-dim)', fontWeight: 700, marginBottom: '0.75rem', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Zap size={13} style={{ color: 'var(--priority-medium)' }} /> Quick Demo One-Click Sign In:
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <button
@@ -153,7 +153,10 @@ const Login = () => {
                 onClick={() => fillDemoAccount('employee@helpdesk.com', 'password123')}
                 style={{ justifyContent: 'space-between' }}
               >
-                <span>👤 Employee (Sarah Jenkins)</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <User size={15} style={{ color: 'var(--accent-blue)' }} />
+                  Employee (Sarah Jenkins)
+                </span>
                 <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>Select</span>
               </button>
               <button
@@ -162,7 +165,10 @@ const Login = () => {
                 onClick={() => fillDemoAccount('support@helpdesk.com', 'password123')}
                 style={{ justifyContent: 'space-between' }}
               >
-                <span>🎧 Support Staff (Alex Rivera)</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Headset size={15} style={{ color: 'var(--accent-cyan)' }} />
+                  Support Staff (Alex Rivera)
+                </span>
                 <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>Select</span>
               </button>
               <button
@@ -171,7 +177,10 @@ const Login = () => {
                 onClick={() => fillDemoAccount('manager@helpdesk.com', 'password123')}
                 style={{ justifyContent: 'space-between' }}
               >
-                <span>📊 Manager (Marcus Vance)</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <BarChart3 size={15} style={{ color: 'var(--accent-purple)' }} />
+                  Manager (Marcus Vance)
+                </span>
                 <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>Select</span>
               </button>
             </div>
