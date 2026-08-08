@@ -80,10 +80,6 @@ const Sidebar = () => {
               <BarChart3 size={18} />
               <span>Analytics Dashboard</span>
             </NavLink>
-            <NavLink to="/manager/tickets" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-              <Ticket size={18} />
-              <span>All System Tickets</span>
-            </NavLink>
           </>
         )}
       </nav>

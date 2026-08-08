@@ -4,7 +4,16 @@ import axiosInstance from '../api/axiosInstance';
 import StatusBadge from '../components/Common/StatusBadge';
 import PriorityBadge from '../components/Common/PriorityBadge';
 import Spinner from '../components/Common/Spinner';
-import { Ticket, PlusCircle, Search, Filter, Eye } from 'lucide-react';
+import SearchableSelect from '../components/Common/SearchableSelect';
+import { Ticket, PlusCircle, Search, Filter, Eye, Clock, PlayCircle, CheckCircle2, ListFilter } from 'lucide-react';
+
+const STATUS_OPTIONS = [
+  { value: 'All', label: 'All Statuses', icon: ListFilter },
+  { value: 'To Do', label: 'To Do', icon: Clock },
+  { value: 'In Progress', label: 'In Progress', icon: PlayCircle },
+  { value: 'In Review', label: 'In Review', icon: Eye },
+  { value: 'Done', label: 'Done', icon: CheckCircle2 }
+];
 
 const MyTickets = () => {
   const [tickets, setTickets] = useState([]);
@@ -84,18 +93,13 @@ const MyTickets = () => {
           {/* Status Filter Dropdown */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Filter size={16} style={{ color: 'var(--text-muted)' }} />
-            <select
-              className="form-select"
+            <SearchableSelect
+              options={STATUS_OPTIONS}
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              style={{ minWidth: '150px' }}
-            >
-              <option value="All">All Statuses</option>
-              <option value="To Do">To Do</option>
-              <option value="In Progress">In Progress</option>
-              <option value="In Review">In Review</option>
-              <option value="Done">Done</option>
-            </select>
+              onChange={setStatusFilter}
+              placeholder="All Statuses"
+              icon={Filter}
+            />
           </div>
         </div>
       </div>

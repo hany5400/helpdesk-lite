@@ -5,6 +5,7 @@ import StatCard from '../components/Common/StatCard';
 import StatusBadge from '../components/Common/StatusBadge';
 import PriorityBadge from '../components/Common/PriorityBadge';
 import Spinner from '../components/Common/Spinner';
+import SearchableSelect from '../components/Common/SearchableSelect';
 import { useToast } from '../context/ToastContext';
 import {
   BarChart3,
@@ -19,10 +20,17 @@ import {
   Eye,
   Inbox,
   AlertCircle,
-  RefreshCw
+  RefreshCw,
+  ListFilter
 } from 'lucide-react';
 
-const STATUS_OPTIONS = ['To Do', 'In Progress', 'In Review', 'Done'];
+const STATUS_OPTIONS = [
+  { value: 'All', label: 'All Statuses', icon: ListFilter },
+  { value: 'To Do', label: 'To Do', icon: Clock },
+  { value: 'In Progress', label: 'In Progress', icon: PlayCircle },
+  { value: 'In Review', label: 'In Review', icon: Eye },
+  { value: 'Done', label: 'Done', icon: CheckCircle2 }
+];
 
 const ManagerDashboard = () => {
   const { showToast } = useToast();
@@ -252,16 +260,13 @@ const ManagerDashboard = () => {
           </div>
           <div className="filter-group">
             <Filter size={16} className="filter-icon" />
-            <select
-              className="form-select filter-select"
+            <SearchableSelect
+              options={STATUS_OPTIONS}
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option value="All">All Statuses</option>
-              {STATUS_OPTIONS.map((st) => (
-                <option key={st} value={st}>{st}</option>
-              ))}
-            </select>
+              onChange={setStatusFilter}
+              placeholder="All Statuses"
+              icon={Filter}
+            />
           </div>
         </div>
 
