@@ -7,6 +7,7 @@ import StatusBadge from '../components/Common/StatusBadge';
 import PriorityBadge from '../components/Common/PriorityBadge';
 import Spinner from '../components/Common/Spinner';
 import { Ticket, PlusCircle, Clock, CheckCircle2, PlayCircle, Eye, ArrowRight } from 'lucide-react';
+import './TicketQueue.css';
 
 const EmployeeDashboard = () => {
   const { user } = useAuth();

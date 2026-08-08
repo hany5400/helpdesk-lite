@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowDown, Minus, ArrowUp } from 'lucide-react';
+import './PriorityBadge.css';
 
 const PriorityBadge = ({ priority }) => {
   let badgeClass = 'badge-medium';

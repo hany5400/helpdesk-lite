@@ -6,6 +6,7 @@ import PriorityBadge from '../components/Common/PriorityBadge';
 import Spinner from '../components/Common/Spinner';
 import SearchableSelect from '../components/Common/SearchableSelect';
 import { Ticket, PlusCircle, Search, Filter, Eye, Clock, PlayCircle, CheckCircle2, ListFilter } from 'lucide-react';
+import './TicketQueue.css';
 
 const STATUS_OPTIONS = [
   { value: 'All', label: 'All Statuses', icon: ListFilter },

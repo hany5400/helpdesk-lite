@@ -1,4 +1,5 @@
 import React from 'react';
+import './StatCard.css';
 
 const StatCard = ({ title, value, icon: Icon, color = 'var(--accent-indigo)' }) => {
   return (

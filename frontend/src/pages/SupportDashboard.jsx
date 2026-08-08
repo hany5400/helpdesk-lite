@@ -8,6 +8,8 @@ import StatusBadge from '../components/Common/StatusBadge';
 import PriorityBadge from '../components/Common/PriorityBadge';
 import Spinner from '../components/Common/Spinner';
 import SearchableSelect from '../components/Common/SearchableSelect';
+import './SupportDashboard.css';
+import './TicketQueue.css';
 import {
   Headphones,
   Clock,
@@ -291,15 +293,13 @@ const SupportDashboard = () => {
                       {updatingId === t.id ? (
                         <Spinner size={16} />
                       ) : (
-                        <select
-                          className="form-select status-select"
+                        <SearchableSelect
+                          options={STATUS_OPTIONS.filter(st => st.value !== 'All')}
                           value={t.status}
-                          onChange={(e) => handleStatusUpdate(t.id, e.target.value)}
-                        >
-                          {STATUS_OPTIONS.filter(st => st.value !== 'All').map((st) => (
-                            <option key={st.value} value={st.value}>{st.label}</option>
-                          ))}
-                        </select>
+                          onChange={(val) => handleStatusUpdate(t.id, val)}
+                          placeholder="Update Status"
+                          icon={RefreshCw}
+                        />
                       )}
                     </td>
                     <td>

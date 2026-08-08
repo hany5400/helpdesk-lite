@@ -7,6 +7,8 @@ import PriorityBadge from '../components/Common/PriorityBadge';
 import Spinner from '../components/Common/Spinner';
 import SearchableSelect from '../components/Common/SearchableSelect';
 import { useToast } from '../context/ToastContext';
+import './ManagerDashboard.css';
+import './TicketQueue.css';
 import {
   BarChart3,
   Ticket,

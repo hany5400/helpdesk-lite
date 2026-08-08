@@ -1,4 +1,5 @@
 import React from 'react';
+import './Spinner.css';
 
 const Spinner = ({ size = 24, fullPage = false }) => {
   if (fullPage) {

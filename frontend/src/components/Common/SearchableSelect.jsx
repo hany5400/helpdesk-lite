@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown, Search, Check } from 'lucide-react';
+import './SearchableSelect.css';
 
 const SearchableSelect = ({ options, value, onChange, placeholder = 'Select...', icon: Icon }) => {
   const [isOpen, setIsOpen] = useState(false);

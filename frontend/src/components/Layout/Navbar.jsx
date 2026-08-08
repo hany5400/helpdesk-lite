@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
+import './Navbar.css';
 import { ShieldCheck, UserCheck, LifeBuoy } from 'lucide-react';
 
 const Navbar = () => {

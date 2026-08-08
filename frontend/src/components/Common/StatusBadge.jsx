@@ -1,5 +1,6 @@
 import React from 'react';
 import { Clock, PlayCircle, Eye, CheckCircle2 } from 'lucide-react';
+import './StatusBadge.css';
 
 const StatusBadge = ({ status }) => {
   let badgeClass = 'badge-todo';

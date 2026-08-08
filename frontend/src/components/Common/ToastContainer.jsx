@@ -1,5 +1,6 @@
 import React from 'react';
 import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
+import './ToastContainer.css';
 
 const ToastContainer = ({ toasts, removeToast }) => {
   if (!toasts || toasts.length === 0) return null;

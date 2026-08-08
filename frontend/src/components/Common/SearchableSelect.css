@@ -1,0 +1,186 @@
+.ss-wrapper {
+  position: relative;
+  display: inline-block;
+  min-width: 170px;
+}
+
+.ss-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  background: rgba(31, 41, 55, 0.6);
+  border: 1px solid var(--border-color-strong);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ss-trigger:hover {
+  border-color: var(--accent-indigo);
+  background: rgba(31, 41, 55, 0.85);
+}
+
+.ss-trigger.ss-open {
+  border-color: var(--accent-indigo);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.ss-trigger-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.ss-trigger-text {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ss-chevron {
+  color: var(--text-muted);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.ss-chevron-open {
+  transform: rotate(180deg);
+}
+
+.ss-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: rgba(17, 24, 39, 0.98);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color-strong);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(99, 102, 241, 0.1);
+  z-index: 100;
+  overflow: hidden;
+  animation: ssSlideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ssSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.ss-search-wrapper {
+  position: relative;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ss-search-icon {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-dim);
+}
+
+.ss-search-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem 0.5rem 2rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.825rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.ss-search-input:focus {
+  border-color: var(--accent-indigo);
+}
+
+.ss-search-input::placeholder {
+  color: var(--text-dim);
+}
+
+.ss-options-list {
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 0.35rem;
+}
+
+.ss-options-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.ss-options-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ss-options-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+}
+
+.ss-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.ss-option:hover {
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--text-main);
+}
+
+.ss-option.ss-selected {
+  background: rgba(99, 102, 241, 0.18);
+  color: white;
+}
+
+.ss-option-icon {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.ss-option.ss-selected .ss-option-icon {
+  opacity: 1;
+  color: var(--accent-indigo);
+}
+
+.ss-check {
+  margin-left: auto;
+  color: var(--accent-indigo);
+  flex-shrink: 0;
+}
+
+.ss-no-results {
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.825rem;
+}
