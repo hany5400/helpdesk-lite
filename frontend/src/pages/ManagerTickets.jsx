@@ -1,19 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
-import StatCard from '../components/Common/StatCard';
 import StatusBadge from '../components/Common/StatusBadge';
 import PriorityBadge from '../components/Common/PriorityBadge';
 import Spinner from '../components/Common/Spinner';
 import { useToast } from '../context/ToastContext';
 import {
-  BarChart3,
   Ticket,
-  Clock,
-  PlayCircle,
-  CheckCircle2,
-  PieChart,
-  Layers,
   Search,
   Filter,
   Eye,
@@ -24,30 +17,17 @@ import {
 
 const STATUS_OPTIONS = ['To Do', 'In Progress', 'In Review', 'Done'];
 
-const ManagerDashboard = () => {
+const ManagerTickets = () => {
   const { showToast } = useToast();
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [tickets, setTickets] = useState([]);
-  const [ticketsLoading, setTicketsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
 
-  const fetchStats = useCallback(async () => {
-    try {
-      const res = await axiosInstance.get('/manager/dashboard');
-      if (res.data.success) {
-        setStats(res.data.stats);
-      }
-    } catch (err) {
-      console.error('Failed to load manager dashboard statistics:', err);
-    }
-  }, []);
-
-  const fetchAllTickets = useCallback(async (isRefresh = false) => {
+  const fetchTickets = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
-    else setTicketsLoading(true);
+    else setLoading(true);
     try {
       const res = await axiosInstance.get('/support/tickets');
       if (res.data.success) {
@@ -56,19 +36,14 @@ const ManagerDashboard = () => {
     } catch (err) {
       showToast('Failed to load tickets', 'error');
     } finally {
-      setTicketsLoading(false);
+      setLoading(false);
       setRefreshing(false);
     }
   }, [showToast]);
 
   useEffect(() => {
-    const loadInitialData = async () => {
-      setLoading(true);
-      await Promise.all([fetchStats(), fetchAllTickets()]);
-      setLoading(false);
-    };
-    loadInitialData();
-  }, [fetchStats, fetchAllTickets]);
+    fetchTickets();
+  }, [fetchTickets]);
 
   const filteredTickets = tickets.filter((t) => {
     const matchesSearch =
@@ -82,26 +57,24 @@ const ManagerDashboard = () => {
 
   if (loading) return <Spinner fullPage />;
 
-  const { total, open, in_progress, closed, byStatus, byPriority, byCategory } = stats || {};
-
   return (
     <div>
       {/* Header */}
       <div className="manager-header">
         <div className="manager-header-content">
           <div className="manager-header-icon">
-            <BarChart3 size={28} />
+            <Ticket size={28} />
           </div>
           <div>
-            <h1 className="manager-header-title">Executive Manager Dashboard</h1>
+            <h1 className="manager-header-title">All System Tickets</h1>
             <p className="manager-header-subtitle">
-              Overview of ticket volume, status distributions, priority metrics, and system performance.
+              View-only access to all tickets across the system. Contact support to make changes.
             </p>
           </div>
         </div>
         <button
           className="btn btn-secondary refresh-btn"
-          onClick={() => fetchAllTickets(true)}
+          onClick={() => fetchTickets(true)}
           disabled={refreshing}
         >
           <RefreshCw size={16} className={refreshing ? 'spinning' : ''} />
@@ -109,129 +82,12 @@ const ManagerDashboard = () => {
         </button>
       </div>
 
-      {/* Top Level Metric Cards */}
-      <div className="grid-stats">
-        <StatCard
-          title="Total Tickets"
-          value={total || 0}
-          icon={Ticket}
-          color="var(--accent-indigo)"
-        />
-        <StatCard
-          title="Open Tickets (To Do)"
-          value={open || 0}
-          icon={Clock}
-          color="var(--status-todo)"
-        />
-        <StatCard
-          title="In Progress / Review"
-          value={in_progress || 0}
-          icon={PlayCircle}
-          color="var(--status-in-progress)"
-        />
-        <StatCard
-          title="Closed (Done)"
-          value={closed || 0}
-          icon={CheckCircle2}
-          color="var(--status-done)"
-        />
-      </div>
-
-      {/* Analytics Breakdown Grid */}
-      <div className="grid-two-col" style={{ marginBottom: '2rem' }}>
-        {/* Tickets by Status */}
-        <div className="glass-card">
-          <div className="analytics-section-header">
-            <PieChart size={20} style={{ color: 'var(--accent-cyan)' }} />
-            <h2 className="analytics-section-title">Tickets by Status</h2>
-          </div>
-
-          <div className="analytics-bars">
-            {byStatus && byStatus.map((item) => {
-              const percentage = total ? Math.round((item.count / total) * 100) : 0;
-              return (
-                <div key={item.status}>
-                  <div className="analytics-bar-label">
-                    <StatusBadge status={item.status} />
-                    <span className="analytics-bar-count">
-                      {item.count} ticket{item.count > 1 ? 's' : ''} ({percentage}%)
-                    </span>
-                  </div>
-                  <div className="analytics-bar-track">
-                    <div
-                      className="analytics-bar-fill"
-                      style={{
-                        width: `${percentage}%`,
-                        background: item.status === 'Done' ? 'var(--status-done)' :
-                                    item.status === 'In Progress' ? 'var(--status-in-progress)' :
-                                    item.status === 'In Review' ? 'var(--status-in-review)' : 'var(--status-todo)'
-                      }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Tickets by Priority */}
-        <div className="glass-card">
-          <div className="analytics-section-header">
-            <BarChart3 size={20} style={{ color: 'var(--accent-indigo)' }} />
-            <h2 className="analytics-section-title">Tickets by Priority</h2>
-          </div>
-
-          <div className="analytics-bars">
-            {byPriority && byPriority.map((item) => {
-              const percentage = total ? Math.round((item.count / total) * 100) : 0;
-              return (
-                <div key={item.priority}>
-                  <div className="analytics-bar-label">
-                    <PriorityBadge priority={item.priority} />
-                    <span className="analytics-bar-count">
-                      {item.count} ticket{item.count > 1 ? 's' : ''} ({percentage}%)
-                    </span>
-                  </div>
-                  <div className="analytics-bar-track">
-                    <div
-                      className="analytics-bar-fill"
-                      style={{
-                        width: `${percentage}%`,
-                        background: item.priority === 'High' ? 'var(--priority-high)' :
-                                    item.priority === 'Medium' ? 'var(--priority-medium)' : 'var(--priority-low)'
-                      }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* Category Breakdown */}
-      <div className="glass-card" style={{ marginBottom: '2rem' }}>
-        <div className="analytics-section-header">
-          <Layers size={20} style={{ color: 'var(--accent-purple)' }} />
-          <h2 className="analytics-section-title">Category Breakdown</h2>
-        </div>
-
-        <div className="category-grid">
-          {byCategory && byCategory.map((item) => (
-            <div key={item.category} className="category-item">
-              <span className="category-name">{item.category}</span>
-              <span className="category-count">{item.count}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Full Ticket List */}
+      {/* Ticket List */}
       <div className="glass-card ticket-queue-card">
         <div className="ticket-queue-header">
           <h2 className="ticket-queue-title">
             <Inbox size={20} />
-            All System Tickets
+            System Tickets
           </h2>
           <span className="ticket-count-badge">
             {filteredTickets.length} ticket{filteredTickets.length !== 1 ? 's' : ''}
@@ -265,11 +121,7 @@ const ManagerDashboard = () => {
           </div>
         </div>
 
-        {ticketsLoading ? (
-          <div style={{ padding: '3rem', textAlign: 'center' }}>
-            <Spinner />
-          </div>
-        ) : filteredTickets.length === 0 ? (
+        {filteredTickets.length === 0 ? (
           <div className="empty-state">
             <div className="empty-state-icon">
               <AlertCircle size={48} />
@@ -293,6 +145,7 @@ const ManagerDashboard = () => {
                   <th>Priority</th>
                   <th>Status</th>
                   <th>Assigned Support</th>
+                  <th>Created</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -322,6 +175,11 @@ const ManagerDashboard = () => {
                       </span>
                     </td>
                     <td>
+                      <span className="category-tag">
+                        {t.created_at ? new Date(t.created_at).toLocaleDateString() : 'N/A'}
+                      </span>
+                    </td>
+                    <td>
                       <Link to={`/tickets/${t.id}`} className="btn btn-secondary btn-sm view-btn">
                         <Eye size={14} />
                       </Link>
@@ -337,4 +195,4 @@ const ManagerDashboard = () => {
   );
 };
 
-export default ManagerDashboard;
+export default ManagerTickets;

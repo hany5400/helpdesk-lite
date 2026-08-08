@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
 import { useAuth } from '../context/AuthContext';
@@ -7,7 +7,20 @@ import StatCard from '../components/Common/StatCard';
 import StatusBadge from '../components/Common/StatusBadge';
 import PriorityBadge from '../components/Common/PriorityBadge';
 import Spinner from '../components/Common/Spinner';
-import { Headphones, Clock, PlayCircle, CheckCircle2, Search, Filter, Eye, UserCheck, Shield, PlusCircle } from 'lucide-react';
+import {
+  Headphones,
+  Clock,
+  PlayCircle,
+  CheckCircle2,
+  Search,
+  Filter,
+  Eye,
+  UserCheck,
+  Shield,
+  RefreshCw,
+  Inbox,
+  AlertCircle
+} from 'lucide-react';
 
 const STATUS_OPTIONS = ['To Do', 'In Progress', 'In Review', 'Done'];
 
@@ -17,11 +30,14 @@ const SupportDashboard = () => {
 
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [updatingId, setUpdatingId] = useState(null);
 
-  const fetchSupportTickets = async () => {
+  const fetchSupportTickets = useCallback(async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true);
+    else setLoading(true);
     try {
       const res = await axiosInstance.get('/support/tickets');
       if (res.data.success) {
@@ -31,12 +47,13 @@ const SupportDashboard = () => {
       showToast('Failed to load support tickets queue', 'error');
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
-  };
+  }, [showToast]);
 
   useEffect(() => {
     fetchSupportTickets();
-  }, []);
+  }, [fetchSupportTickets]);
 
   const handleStatusUpdate = async (ticketId, newStatus) => {
     setUpdatingId(ticketId);
@@ -98,25 +115,29 @@ const SupportDashboard = () => {
 
   return (
     <div>
-      {/* Header with Create Ticket Button */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        gap: '1rem',
-        marginBottom: '2rem'
-      }}>
-        <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Support Staff Workspace</h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-            Manage incoming support requests, claim unassigned tickets, and update resolution statuses.
-          </p>
+      {/* Header */}
+      <div className="support-header">
+        <div className="support-header-content">
+          <div className="support-header-icon">
+            <Headphones size={28} />
+          </div>
+          <div>
+            <h1 className="support-header-title">
+              Welcome back, {user?.name?.split(' ')[0]}
+            </h1>
+            <p className="support-header-subtitle">
+              Manage incoming support requests, claim unassigned tickets, and update resolution statuses.
+            </p>
+          </div>
         </div>
-        <Link to="/tickets/new" className="btn btn-primary">
-          <PlusCircle size={18} />
-          <span>Create Ticket</span>
-        </Link>
+        <button
+          className="btn btn-secondary refresh-btn"
+          onClick={() => fetchSupportTickets(true)}
+          disabled={refreshing}
+        >
+          <RefreshCw size={16} className={refreshing ? 'spinning' : ''} />
+          <span>{refreshing ? 'Refreshing...' : 'Refresh Queue'}</span>
+        </button>
       </div>
 
       {/* Stats */}
@@ -148,27 +169,24 @@ const SupportDashboard = () => {
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="glass-card" style={{ marginBottom: '1.5rem', padding: '1rem 1.25rem' }}>
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-          <div style={{ flex: 1, minWidth: '240px', position: 'relative' }}>
+      <div className="glass-card filter-bar">
+        <div className="filter-bar-inner">
+          <div className="search-wrapper">
+            <Search size={18} className="search-icon" />
             <input
               type="text"
-              className="form-input"
+              className="form-input search-input"
               placeholder="Search by requester name, title, category or #ID..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              style={{ paddingLeft: '2.5rem' }}
             />
-            <Search size={18} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
           </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Filter size={16} style={{ color: 'var(--text-muted)' }} />
+          <div className="filter-group">
+            <Filter size={16} className="filter-icon" />
             <select
-              className="form-select"
+              className="form-select filter-select"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              style={{ minWidth: '150px' }}
             >
               <option value="All">All Statuses</option>
               {STATUS_OPTIONS.map((st) => (
@@ -180,11 +198,28 @@ const SupportDashboard = () => {
       </div>
 
       {/* Ticket Queue Table */}
-      <div className="glass-card">
+      <div className="glass-card ticket-queue-card">
+        <div className="ticket-queue-header">
+          <h2 className="ticket-queue-title">
+            <Inbox size={20} />
+            Ticket Queue
+          </h2>
+          <span className="ticket-count-badge">
+            {filteredTickets.length} ticket{filteredTickets.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+
         {filteredTickets.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-muted)' }}>
-            <Headphones size={40} style={{ margin: '0 auto 1rem', opacity: 0.5 }} />
-            <p style={{ fontWeight: 600 }}>No support tickets match the current criteria.</p>
+          <div className="empty-state">
+            <div className="empty-state-icon">
+              <AlertCircle size={48} />
+            </div>
+            <h3 className="empty-state-title">No tickets found</h3>
+            <p className="empty-state-text">
+              {search || statusFilter !== 'All'
+                ? 'Try adjusting your search or filter criteria.'
+                : 'There are no tickets in the queue at the moment.'}
+            </p>
           </div>
         ) : (
           <div className="table-container">
@@ -196,7 +231,7 @@ const SupportDashboard = () => {
                   <th>Employee</th>
                   <th>Category</th>
                   <th>Priority</th>
-                  <th>Current Status</th>
+                  <th>Status</th>
                   <th>Assigned Support</th>
                   <th>Update Status</th>
                   <th>Action</th>
@@ -204,43 +239,41 @@ const SupportDashboard = () => {
               </thead>
               <tbody>
                 {filteredTickets.map((t) => (
-                  <tr key={t.id}>
-                    <td style={{ fontWeight: 700, color: 'var(--accent-cyan)' }}>#{t.id}</td>
-                    <td style={{ fontWeight: 600, maxWidth: '220px' }}>{t.title}</td>
+                  <tr key={t.id} className="table-row">
                     <td>
-                      <div>
-                        <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>{t.employee_name}</p>
-                        <p style={{ fontSize: '0.775rem', color: 'var(--text-dim)' }}>{t.employee_email}</p>
+                      <span className="ticket-id">#{t.id}</span>
+                    </td>
+                    <td>
+                      <span className="ticket-title">{t.title}</span>
+                    </td>
+                    <td>
+                      <div className="employee-cell">
+                        <span className="employee-name">{t.employee_name}</span>
+                        <span className="employee-email">{t.employee_email}</span>
                       </div>
                     </td>
-                    <td>{t.category}</td>
+                    <td>
+                      <span className="category-tag">{t.category}</span>
+                    </td>
                     <td><PriorityBadge priority={t.priority} /></td>
                     <td><StatusBadge status={t.status} /></td>
                     <td>
                       {updatingId === t.id ? (
                         <Spinner size={16} />
                       ) : t.assigned_to === user?.id ? (
-                        <span style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.35rem',
-                          color: 'var(--accent-cyan)',
-                          fontWeight: 700,
-                          fontSize: '0.85rem'
-                        }}>
+                        <span className="assigned-badge">
                           <Shield size={14} /> Assigned to Me
                         </span>
                       ) : !t.assigned_to ? (
                         <button
                           type="button"
-                          className="btn btn-primary btn-sm"
+                          className="btn btn-primary btn-sm claim-btn"
                           onClick={() => handleClaimTicket(t.id)}
-                          style={{ padding: '0.35rem 0.75rem', fontSize: '0.775rem', gap: '0.35rem', whiteSpace: 'nowrap' }}
                         >
                           <UserCheck size={14} /> Claim Ticket
                         </button>
                       ) : (
-                        <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                        <span className="assigned-other">
                           {t.assigned_to_name}
                         </span>
                       )}
@@ -250,10 +283,9 @@ const SupportDashboard = () => {
                         <Spinner size={16} />
                       ) : (
                         <select
-                          className="form-select"
+                          className="form-select status-select"
                           value={t.status}
                           onChange={(e) => handleStatusUpdate(t.id, e.target.value)}
-                          style={{ padding: '0.3rem 0.5rem', fontSize: '0.8rem', width: '130px' }}
                         >
                           {STATUS_OPTIONS.map((st) => (
                             <option key={st} value={st}>{st}</option>
@@ -262,7 +294,7 @@ const SupportDashboard = () => {
                       )}
                     </td>
                     <td>
-                      <Link to={`/tickets/${t.id}`} className="btn btn-secondary btn-sm">
+                      <Link to={`/tickets/${t.id}`} className="btn btn-secondary btn-sm view-btn">
                         <Eye size={14} />
                       </Link>
                     </td>

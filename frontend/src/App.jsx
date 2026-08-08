@@ -13,6 +13,7 @@ import MyTickets from './pages/MyTickets';
 import TicketDetails from './pages/TicketDetails';
 import SupportDashboard from './pages/SupportDashboard';
 import ManagerDashboard from './pages/ManagerDashboard';
+import ManagerTickets from './pages/ManagerTickets';
 import NotFound from './pages/NotFound';
 
 const RootRedirect = () => {
@@ -57,6 +58,7 @@ function App() {
                 {/* Manager Routes */}
                 <Route element={<ProtectedRoute allowedRoles={['manager']} />}>
                   <Route path="/manager" element={<ManagerDashboard />} />
+                  <Route path="/manager/tickets" element={<ManagerTickets />} />
                 </Route>
 
                 {/* 404 Not Found Page */}

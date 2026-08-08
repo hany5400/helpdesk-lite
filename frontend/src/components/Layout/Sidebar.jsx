@@ -68,14 +68,6 @@ const Sidebar = () => {
               <Headphones size={18} />
               <span>Ticket Queue</span>
             </NavLink>
-            <NavLink to="/tickets/new" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-              <PlusCircle size={18} />
-              <span>Submit Ticket</span>
-            </NavLink>
-            <NavLink to="/tickets" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-              <Ticket size={18} />
-              <span>My Tickets</span>
-            </NavLink>
           </>
         )}
 
@@ -88,13 +80,9 @@ const Sidebar = () => {
               <BarChart3 size={18} />
               <span>Analytics Dashboard</span>
             </NavLink>
-            <NavLink to="/support" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            <NavLink to="/manager/tickets" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
               <Ticket size={18} />
               <span>All System Tickets</span>
-            </NavLink>
-            <NavLink to="/tickets/new" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-              <PlusCircle size={18} />
-              <span>Submit Ticket</span>
             </NavLink>
           </>
         )}
