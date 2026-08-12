@@ -1,10 +1,8 @@
 -- ========================================================
 -- HelpDesk Lite Database Schema & Seed Data
--- Compatible with MySQL 5.7+ & phpMyAdmin
+-- Compatible with MySQL 5.7+ & phpMyAdmin / Cloud Providers
 -- ========================================================
 
-CREATE DATABASE IF NOT EXISTS `helpdesk_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `helpdesk_db`;
 
 -- --------------------------------------------------------
 -- Table structure for table `users`
